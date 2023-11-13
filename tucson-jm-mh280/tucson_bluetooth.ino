@@ -8,6 +8,8 @@ int Next = 3;
 int PlayPause = 4;
 int Prev = 5;
 
+int counter = 0;
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(A0, INPUT); //Next-Prev Mode (KEY0)
@@ -43,7 +45,7 @@ void checkNext() {
   }
 }
 
-void checkREV() {
+void checkREW() {
   //MH-M18 Vol Down
   if(key0 >= 390 && key0 <= 430) {
     Serial.print("REV: KEY0: ");
@@ -69,10 +71,20 @@ void checkCDMP3() {
   if(key1 >= 290 && key1 <= 350) {
     Serial.print("CD: KEY1: ");
     Serial.println(key1, DEC);
-    digitalWrite(PlayPause, HIGH);
-    delay(200);
-    digitalWrite(PlayPause, LOW);
+    counter++;
+    Serial.print("Counter: ");
+    Serial.println(counter);
+    if(counter >= 12) {
+      Serial.println("Toggling power...");
+      counter = 0;
+      digitalWrite(Power, HIGH);
+      delay(200);
+      digitalWrite(Power, LOW);
+      delay(800);
+    }
   }
+  else
+    counter = 0;
 }
 
 void checkMidButton() {
@@ -81,9 +93,9 @@ void checkMidButton() {
     Serial.println(key0, DEC);
     Serial.print("Mid KEY1: ");
     Serial.println(key1, DEC);
-    digitalWrite(Power, HIGH);
+    digitalWrite(PlayPause, HIGH);
     delay(200);
-    digitalWrite(Power, LOW);
+    digitalWrite(PlayPause, LOW);
   }
 }
 
@@ -99,7 +111,7 @@ void loop() {
 
   checkPrev();
   checkNext();
-  checkREV();
+  checkREW();
   checkFF();
   checkCDMP3();
   checkMidButton();
