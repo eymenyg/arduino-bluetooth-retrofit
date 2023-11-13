@@ -10,6 +10,8 @@ int Prev = 5;
 
 int counter = 0;
 
+bool isPowerOn;
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(A0, INPUT); //Next-Prev Mode (KEY0)
@@ -19,6 +21,8 @@ void setup() {
   pinMode(3, OUTPUT); //Next
   pinMode(4, OUTPUT); //PlayPause
   pinMode(5, OUTPUT); //Prev
+
+  isPowerOn = true;
 
   Serial.begin(9600);
 
@@ -80,6 +84,9 @@ void checkCDMP3() {
       digitalWrite(Power, HIGH);
       delay(200);
       digitalWrite(Power, LOW);
+      isPowerOn = !isPowerOn;
+      Serial.print("Power is now ");
+      Serial.println(isPowerOn ? "on" : "off");
       delay(800);
     }
   }
@@ -108,11 +115,13 @@ void loop() {
   // Serial.println(key0, DEC);
   // Serial.print("KEY1: ");
   // Serial.println(key1, DEC);
-
-  checkPrev();
-  checkNext();
-  checkREW();
-  checkFF();
   checkCDMP3();
-  checkMidButton();
+
+  if(isPowerOn) {
+    checkPrev();
+    checkNext();
+    checkREW();
+    checkFF();
+    checkMidButton();
+  }
 }
